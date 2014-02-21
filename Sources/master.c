@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Fri Feb 21 12:25:56 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 16:16:42 2014 Barthelemy Delemotte
+** Last update Fri Feb 21 18:39:53 2014 Barthelemy Delemotte
 */
 
 #include		<stdlib.h>
@@ -22,25 +22,22 @@
 
 #include		"myscript.h"
 
-static void		write_start(t_myscript_opts *opts)
+static void		master_open_outputs(t_myscript_opts *opts)
 {
-  time_t		t;
-
-  if (!(opts->flags & MS_OPT_QUIET))
-    printf("The script has started, the file is %s\n", opts->output_file);
-  t = time(NULL);
-  fprintf(g_myscript_vars.output, "The script has started at %s", ctime(&t));
-  fflush(g_myscript_vars.output);
-}
-
-static void		write_end(t_myscript_opts *opts)
-{
-  time_t		t;
-
-  if (!(opts->flags & MS_OPT_QUIET))
-    printf("Script terminated, the file is %s\n", opts->output_file);
-  t = time(NULL);
-  fprintf(g_myscript_vars.output, "\nScript terminated at %s", ctime(&t));
+  g_myscript_vars.output =
+    fopen(opts->output_file, opts->flags & MS_OPT_APPEND ? "a" : "w");
+  if (!g_myscript_vars.output)
+    die("typescript");
+  atexit(&close_output);
+  if (opts->flags & MS_OPT_TIMING)
+    {
+      g_myscript_vars.timing =
+	fopen(opts->timing_file, opts->flags & MS_OPT_APPEND ? "a" : "w");
+      if (!g_myscript_vars.timing)
+	die(opts->timing_file);
+      atexit(&close_timing);
+      gettimeofday(&g_myscript_vars.last_time, NULL);
+    }
 }
 
 static void		master_init(t_myscript_opts *opts, fd_set *fds)
@@ -52,11 +49,7 @@ static void		master_init(t_myscript_opts *opts, fd_set *fds)
   FD_ZERO(fds);
   FD_SET(0, fds);
   FD_SET(g_myscript_vars.master_fd, fds);
-  g_myscript_vars.output =
-    fopen(opts->output_file, opts->flags & MS_OPT_APPEND ? "a" : "w");
-  if (!g_myscript_vars.output)
-    die("typescript");
-  atexit(&close_output);
+  master_open_outputs(opts);
   if (tcgetattr(0, &t) == -1)
     die("tcgetattr");
   g_myscript_vars.original_term = t;
@@ -66,7 +59,19 @@ static void		master_init(t_myscript_opts *opts, fd_set *fds)
   t.c_cc[VTIME] = 0;
   if (tcsetattr(0, TCSANOW, &t))
     die("tcsetattr");
-  write_start(opts);
+  print_start(opts);
+}
+
+static void		master_record(t_myscript_opts *opts,
+				      const char *buffer,
+				      size_t size)
+{
+  if (!fwrite(buffer, sizeof(char), size, g_myscript_vars.output))
+    die(opts->output_file);
+  if (opts->flags & MS_OPT_FLUSH)
+    fflush(g_myscript_vars.output);
+  if (opts->flags & MS_OPT_TIMING)
+    print_timing(opts, size);
 }
 
 static void		master_loop(t_myscript_opts *opts)
@@ -90,10 +95,8 @@ static void		master_loop(t_myscript_opts *opts)
       if (FD_ISSET(master_fd, &current_fds) &&
 	  (ret = read(master_fd, buffer, BUFFER_SIZE)) > 0)
 	{
-	  fwrite(buffer, sizeof(char), ret, g_myscript_vars.output);
 	  write(STDOUT_FILENO, buffer, ret);
-	  if (opts->flags & MS_OPT_FLUSH)
-	    fflush(g_myscript_vars.output);
+	  master_record(opts, buffer, (size_t)ret);
 	}
     }
 }
@@ -101,7 +104,7 @@ static void		master_loop(t_myscript_opts *opts)
 int			master(t_myscript_opts *opts)
 {
   master_loop(opts);
-  write_end(opts);
+  print_end(opts);
   return (opts->flags & MS_OPT_RETURN ?
 	  g_myscript_vars.ret : EXIT_SUCCESS);
 }

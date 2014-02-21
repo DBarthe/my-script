@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Thu Feb 20 16:44:52 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 16:23:05 2014 Barthelemy Delemotte
+** Last update Fri Feb 21 17:48:55 2014 Barthelemy Delemotte
 */
 
 #include		<pty.h>
@@ -45,6 +45,7 @@ int			myscript(t_myscript_opts *opts)
   struct winsize	ws;
   struct termios	term;
 
+  memset(&g_myscript_vars, 0, sizeof(g_myscript_vars));
   pid = myforkpty(&g_myscript_vars.master_fd, NULL, &term, &ws);
   if (pid == -1)
     die("forkpty");
@@ -55,5 +56,6 @@ int			myscript(t_myscript_opts *opts)
     }
   g_myscript_vars.slave_pid = pid;
   g_myscript_vars.ret = EXIT_SUCCESS;
+
   return (master(opts));
 }

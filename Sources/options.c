@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Fri Feb 21 13:01:45 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 16:24:13 2014 Barthelemy Delemotte
+** Last update Fri Feb 21 17:20:25 2014 Barthelemy Delemotte
 */
 
 #include		<string.h>
@@ -27,7 +27,7 @@ static int		is_opt(const char *arg, char c, const char *s)
   return (0);
 }
 
-static void		usage(FILE *stream)
+void			usage(FILE *stream)
 {
   fprintf(stream, "Usage :\n  myscript [options] [file]\n\n");
   fprintf(stream, "Options :\n");
@@ -38,20 +38,34 @@ static void		usage(FILE *stream)
 	  " child process\n");
   fprintf(stream, " -f, --flush              flush after each writting\n");
   fprintf(stream, " -q, --quiet              silence mode\n");
-  fprintf(stream, " -t, --timing             output timing data to standard "
+  fprintf(stream, " -t, --timing <file>      output timing data to standard "
 	  "error\n");
   fprintf(stream, " -h, --help               display this help\n");
   fprintf(stream, "\n");
 }
 
-static void		error_usage(const char *msg, const char *token)
+static int		fascist_epitech_norm(int ac, char **av, int *i,
+					     t_myscript_opts *opts)
 {
-  fprintf(stderr, "myscript: %s", msg);
-  if (token)
-    fprintf(stderr, " -- '%s'", token);
-  fprintf(stderr, "\n\n");
-  usage(stderr);
-  exit(EXIT_FAILURE);
+  int			ret;
+
+  ret = 0;
+  if (is_opt(av[*i] + 1, 't', "timing"))
+    {
+      if (++(*i) >= ac)
+	error_usage("missing filename after option", "t");
+      opts->flags |= MS_OPT_TIMING, opts->timing_file = av[*i];
+      ret++;
+    }
+  else if (is_opt(av[*i] + 1, 'c', "command"))
+    {
+      opts->flags |= MS_OPT_COMMAND;
+      if (++(*i) >= ac)
+	error_usage("missing command after option", "c");
+      opts->command = av[*i];
+      ret++;
+    }
+  return (ret);
 }
 
 static int		treat_opt(int ac, char **av, int *i,
@@ -68,17 +82,12 @@ static int		treat_opt(int ac, char **av, int *i,
     opts->flags |= MS_OPT_FLUSH;
   if (is_opt(av[*i] + 1, 'q', "quiet") && ++ret)
     opts->flags |= MS_OPT_QUIET;
-  if (is_opt(av[*i] + 1, 't', "timing") && ++ret)
-    opts->flags |= MS_OPT_TIMING;
   if (is_opt(av[*i] + 1, 'h', "help") && ++ret)
-    usage(stdout), exit(EXIT_SUCCESS);
-  if (is_opt(av[*i] + 1, 'c', "command") && ++ret)
     {
-      opts->flags |= MS_OPT_COMMAND;
-      if (++(*i) >= ac)
-	error_usage("missing argument after option", "c");
-      opts->command = av[*i];
+      usage(stdout);
+      exit(EXIT_SUCCESS);
     }
+  ret += fascist_epitech_norm(ac, av, i, opts);
   return (ret ? 0 : -1);
 }
 

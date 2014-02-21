@@ -5,7 +5,7 @@
 ** Login   <bade@epitech.net>
 **
 ** Started on Fri Feb 21 13:13:40 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 16:22:08 2014 Barthelemy Delemotte
+** Last update Fri Feb 21 18:47:22 2014 Barthelemy Delemotte
 */
 
 #define			_XOPEN_SOURCE
@@ -28,6 +28,14 @@ static int		error_close(int fd)
   return (-1);
 }
 
+static int		myunlockpt(int fd)
+{
+  int			unlock;
+
+  unlock = 0;
+  return (ioctl(fd, TIOCSPTLCK, &unlock));
+}
+
 static int		myopenpty(int *amaster, int *aslave, char *name,
 				  struct termios *termp,
 				  struct winsize *winp)
@@ -36,7 +44,7 @@ static int		myopenpty(int *amaster, int *aslave, char *name,
 
   if ((*amaster = open("/dev/ptmx", O_RDWR | O_NOCTTY)) == -1)
     return (-1);
-  if (unlockpt(*amaster) == -1)
+  if (myunlockpt(*amaster) == -1)
     return (error_close(*amaster));
   if ((pts_name = ptsname(*amaster)) == NULL)
     return (error_close(*amaster));
