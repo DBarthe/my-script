@@ -5,21 +5,13 @@
 ** Login   <bade@epitech.net>
 **
 ** Started on Fri Feb 21 13:13:40 2014 Barthelemy Delemotte
-** Last update Mon Feb 24 12:02:22 2014 Barthelemy Delemotte
+** Last update Mon Feb 24 12:06:24 2014 Barthelemy Delemotte
 */
 
 #define			_XOPEN_SOURCE	500
-
-#include		<pty.h>
-#include		<utmp.h>
-#include		<stdlib.h>
-
 #include		<string.h>
-#include		<stdio.h>
-#include		<termios.h>
 #include		<unistd.h>
 #include		<fcntl.h>
-#include		<sys/ioctl.h>
 
 #include		"myscript.h"
 
