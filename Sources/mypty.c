@@ -5,16 +5,17 @@
 ** Login   <bade@epitech.net>
 **
 ** Started on Fri Feb 21 13:13:40 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 18:47:22 2014 Barthelemy Delemotte
+** Last update Mon Feb 24 12:02:22 2014 Barthelemy Delemotte
 */
 
-#define			_XOPEN_SOURCE
+#define			_XOPEN_SOURCE	500
 
 #include		<pty.h>
 #include		<utmp.h>
 #include		<stdlib.h>
 
 #include		<string.h>
+#include		<stdio.h>
 #include		<termios.h>
 #include		<unistd.h>
 #include		<fcntl.h>
@@ -22,10 +23,15 @@
 
 #include		"myscript.h"
 
-static int		error_close(int fd)
+static char		*myptsname(int fd)
 {
-  close(fd);
-  return (-1);
+  static char		storage[sizeof(DEVPT_PATH) + 20];
+  int			pty_no;
+
+  if (ioctl(fd, TIOCGPTN, &pty_no) == -1 ||
+      snprintf(storage, sizeof(storage), "%s%d", DEVPT_PATH, pty_no) == -1)
+    return (NULL);
+  return (storage);
 }
 
 static int		myunlockpt(int fd)
@@ -46,7 +52,7 @@ static int		myopenpty(int *amaster, int *aslave, char *name,
     return (-1);
   if (myunlockpt(*amaster) == -1)
     return (error_close(*amaster));
-  if ((pts_name = ptsname(*amaster)) == NULL)
+  if ((pts_name = myptsname(*amaster)) == NULL)
     return (error_close(*amaster));
   if (name)
     strcpy(name, pts_name);

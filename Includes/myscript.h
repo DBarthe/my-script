@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Thu Feb 20 16:06:44 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 18:34:46 2014 Barthelemy Delemotte
+** Last update Mon Feb 24 11:57:29 2014 Barthelemy Delemotte
 */
 
 #ifndef			MYSCRIPT_H_
@@ -17,6 +17,7 @@
 # include		<sys/ioctl.h>
 
 # define		BUFFER_SIZE	4096
+# define		DEVPT_PATH	"/dev/pts/"
 
 typedef	struct
 {
@@ -45,25 +46,52 @@ struct
   struct termios	original_term;
 }			g_myscript_vars;
 
+/*
+** myscript.c
+*/
 int			myscript(t_myscript_opts *opts);
+
+/*
+** mater.c
+*/
 int			master(t_myscript_opts *opts);
 
-void			die(const char *s);
+/*
+** exit.c
+*/
 void			reset_term(void);
 void			close_output(void);
 void			close_timing(void);
-void			error_usage(const char *msg, const char *token);
 
+/*
+** error.c
+*/
+void			die(const char *s);
+void			error_usage(const char *msg, const char *token);
+int                     error_close(int fd);
+
+/*
+** sighandlers.c
+*/
 void			sigchild_handler(int signum);
 void			sigwinch_handler(int signum);
 
+/*
+** options.c
+*/
 int			parse_opts(int ac, char **av, t_myscript_opts *opts);
 void			usage(FILE *stream);
 
+/*
+** mypty.c
+*/
 pid_t			myforkpty(int *amaster, char *name,
 				  struct termios *termp,
 				  struct winsize *winp);
 
+/*
+** print.c
+*/
 void			print_start(t_myscript_opts *opts);
 void			print_end(t_myscript_opts *opts);
 void			print_timing(t_myscript_opts *opts, size_t size);

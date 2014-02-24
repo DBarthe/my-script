@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Fri Feb 21 12:33:49 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 17:52:02 2014 Barthelemy Delemotte
+** Last update Mon Feb 24 11:36:56 2014 Barthelemy Delemotte
 */
 
 #include		<stdlib.h>
@@ -14,13 +14,6 @@
 #include		<termios.h>
 
 #include		"myscript.h"
-
-void			die(const char *s)
-{
-  if (s)
-    perror(s);
-  exit(EXIT_FAILURE);
-}
 
 void			reset_term(void)
 {
@@ -37,14 +30,4 @@ void			close_timing(void)
 {
   fflush(g_myscript_vars.timing);
   fclose(g_myscript_vars.timing);
-}
-
-void			error_usage(const char *msg, const char *token)
-{
-  fprintf(stderr, "myscript: %s", msg);
-  if (token)
-    fprintf(stderr, " -- '%s'", token);
-  fprintf(stderr, "\n\n");
-  usage(stderr);
-  exit(EXIT_FAILURE);
 }

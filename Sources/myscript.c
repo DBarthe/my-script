@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Thu Feb 20 16:44:52 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 17:48:55 2014 Barthelemy Delemotte
+** Last update Mon Feb 24 11:42:57 2014 Barthelemy Delemotte
 */
 
 #include		<pty.h>
@@ -56,6 +56,5 @@ int			myscript(t_myscript_opts *opts)
     }
   g_myscript_vars.slave_pid = pid;
   g_myscript_vars.ret = EXIT_SUCCESS;
-
   return (master(opts));
 }
