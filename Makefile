@@ -1,3 +1,12 @@
+##
+## Makefile for myscript in /home/common/Dev/tek2/Unix/PSU_2013_myscript
+## 
+## Made by Barthelemy Delemotte
+## Login   <delemo_b@epitech.net>
+## 
+## Started on Fri Feb 28 19:39:29 2014 Barthelemy Delemotte
+## Last update Fri Feb 28 19:39:43 2014 Barthelemy Delemotte
+##
 
 CC ?= clang
 
@@ -15,7 +24,7 @@ OBJ = $(SRC:.c=.o)
 
 RM = rm -vf
 
-TARGET = myscript
+TARGET = my_script
 
 ifeq ($(DEBUG), 1)
 CFLAGS += $(DBGFLAGS)

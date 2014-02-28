@@ -5,7 +5,7 @@
 ** Login   <bade@epitech.net>
 **
 ** Started on Fri Feb 21 13:13:40 2014 Barthelemy Delemotte
-** Last update Mon Feb 24 12:06:24 2014 Barthelemy Delemotte
+** Last update Fri Feb 28 19:15:29 2014 Barthelemy Delemotte
 */
 
 #define			_XOPEN_SOURCE	500
@@ -35,8 +35,7 @@ static int		myunlockpt(int fd)
 }
 
 static int		myopenpty(int *amaster, int *aslave, char *name,
-				  struct termios *termp,
-				  struct winsize *winp)
+				  t_term *term)
 {
   char			*pts_name;
 
@@ -50,10 +49,10 @@ static int		myopenpty(int *amaster, int *aslave, char *name,
     strcpy(name, pts_name);
   if ((*aslave = open(pts_name, O_RDWR)) == -1)
     return (error_close(*amaster));
-  if (termp && tcgetattr(0, termp) != -1)
-    tcsetattr(1, TCSANOW, termp);
-  if (winp && ioctl(1, TIOCGWINSZ, winp) != -1)
-    ioctl(g_myscript_vars.master_fd, TIOCSWINSZ, winp);
+  if (term->termp && tcgetattr(0, term->termp) != -1)
+    tcsetattr(1, TCSANOW, term->termp);
+  if (term->winp && ioctl(1, TIOCGWINSZ, term->winp) != -1)
+    ioctl(g_myscript_vars.master_fd, TIOCSWINSZ, term->winp);
   return (0);
 }
 
@@ -77,8 +76,11 @@ pid_t			myforkpty(int *amaster, char *name,
 {
   int			slave;
   pid_t			pid;
+  t_term		term;
 
-  if (myopenpty(amaster, &slave, name, termp, winp) == -1)
+  term.termp = termp;
+  term.winp = winp;
+  if (myopenpty(amaster, &slave, name, &term) == -1)
     return (-1);
   if ((pid = fork()) == -1)
     return (-1);

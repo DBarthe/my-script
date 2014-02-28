@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Thu Feb 20 16:06:44 2014 Barthelemy Delemotte
-** Last update Mon Feb 24 11:57:29 2014 Barthelemy Delemotte
+** Last update Fri Feb 28 19:13:04 2014 Barthelemy Delemotte
 */
 
 #ifndef			MYSCRIPT_H_
@@ -27,13 +27,19 @@ typedef	struct
   enum
     {
       MS_OPT_APPEND	= 0x1,
-      MS_OPT_COMMAND 	= 0x2,
+      MS_OPT_COMMAND	= 0x2,
       MS_OPT_RETURN	= 0x4,
       MS_OPT_FLUSH	= 0x8,
       MS_OPT_QUIET	= 0x10,
       MS_OPT_TIMING	= 0x20
     }			flags;
 }			t_myscript_opts;
+
+typedef	struct
+{
+  struct termios	*termp;
+  struct winsize	*winp;
+}			t_term;
 
 struct
 {
@@ -68,7 +74,7 @@ void			close_timing(void);
 */
 void			die(const char *s);
 void			error_usage(const char *msg, const char *token);
-int                     error_close(int fd);
+int			error_close(int fd);
 
 /*
 ** sighandlers.c

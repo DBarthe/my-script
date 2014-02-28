@@ -5,7 +5,7 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Fri Feb 21 13:01:45 2014 Barthelemy Delemotte
-** Last update Fri Feb 21 17:20:25 2014 Barthelemy Delemotte
+** Last update Fri Feb 28 19:41:06 2014 Barthelemy Delemotte
 */
 
 #include		<string.h>
@@ -29,7 +29,7 @@ static int		is_opt(const char *arg, char c, const char *s)
 
 void			usage(FILE *stream)
 {
-  fprintf(stream, "Usage :\n  myscript [options] [file]\n\n");
+  fprintf(stream, "Usage :\n  my_script [options] [file]\n\n");
   fprintf(stream, "Options :\n");
   fprintf(stream, " -a, --append             append to the output file\n");
   fprintf(stream, " -c, --command <command>  execute the command, "
@@ -54,7 +54,8 @@ static int		fascist_epitech_norm(int ac, char **av, int *i,
     {
       if (++(*i) >= ac)
 	error_usage("missing filename after option", "t");
-      opts->flags |= MS_OPT_TIMING, opts->timing_file = av[*i];
+      opts->flags |= MS_OPT_TIMING;
+      opts->timing_file = av[*i];
       ret++;
     }
   else if (is_opt(av[*i] + 1, 'c', "command"))

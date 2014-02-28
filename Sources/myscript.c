@@ -5,10 +5,8 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Thu Feb 20 16:44:52 2014 Barthelemy Delemotte
-** Last update Mon Feb 24 11:42:57 2014 Barthelemy Delemotte
+** Last update Fri Feb 28 19:37:16 2014 Barthelemy Delemotte
 */
-
-#include		<pty.h>
 
 #include		<stdlib.h>
 #include		<stdio.h>
@@ -52,7 +50,7 @@ int			myscript(t_myscript_opts *opts)
   if (pid == 0)
     {
       slave(opts);
-      assert(true);
+      assert(1);
     }
   g_myscript_vars.slave_pid = pid;
   g_myscript_vars.ret = EXIT_SUCCESS;

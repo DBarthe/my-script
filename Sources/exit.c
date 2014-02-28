@@ -5,12 +5,10 @@
 ** Login   <delemo_b@epitech.net>
 **
 ** Started on Fri Feb 21 12:33:49 2014 Barthelemy Delemotte
-** Last update Mon Feb 24 11:36:56 2014 Barthelemy Delemotte
+** Last update Fri Feb 28 18:02:54 2014 Barthelemy Delemotte
 */
 
-#include		<stdlib.h>
 #include		<stdio.h>
-#include		<errno.h>
 #include		<termios.h>
 
 #include		"myscript.h"
