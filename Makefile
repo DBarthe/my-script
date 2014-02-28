@@ -5,7 +5,7 @@
 ## Login   <delemo_b@epitech.net>
 ## 
 ## Started on Fri Feb 28 19:39:29 2014 Barthelemy Delemotte
-## Last update Fri Feb 28 19:39:43 2014 Barthelemy Delemotte
+## Last update Fri Feb 28 19:48:29 2014 Barthelemy Delemotte
 ##
 
 CC ?= clang
@@ -19,7 +19,16 @@ NDBGFLAGS = -DNDEBUG
 OFLAGS = -O3
 LDFLAGS = -lutil
 
-SRC = $(wildcard $(SRCPATH)/*.c)
+SRC = 	$(SRCPATH)/error.c \
+	$(SRCPATH)/exit.c \
+	$(SRCPATH)/main.c \
+	$(SRCPATH)/master.c \
+	$(SRCPATH)/mypty.c \
+	$(SRCPATH)/myscript.c \
+	$(SRCPATH)/options.c \
+	$(SRCPATH)/print.c \
+	$(SRCPATH)/sighandlers.c \
+
 OBJ = $(SRC:.c=.o)
 
 RM = rm -vf
